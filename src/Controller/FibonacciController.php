@@ -5,34 +5,29 @@ namespace Src\Controller;
 
 use Src\Model\Fibonacci;
 use Src\Model\FibonacciImpl;
+use Src\View\FibonacciView;
 
 class FibonacciController {
-  public string $requestMethod;
-    
   public Fibonacci $fibonacciModel;
 
-  public int $fibonacciNumber;
+  public array $params;
 
   public function __construct(
-    string $requestMethod,
-    int $fibonacciNumber
+    array $params
   ) {
-      $this->requestMethod = $requestMethod;
       $this->fibonacciModel = new FibonacciImpl();;
-      $this->fibonacciNumber = $fibonacciNumber;
+      $this->params = $params;
   }
 
   public function ProcessRequest() {
-      if ($this->requestMethod === 'GET') {
-          header('HTTP/1.1 200 OK');
-          try{
-              echo json_encode($this->fibonacciModel->getNumber($this->fibonacciNumber));
-          } catch(\Exception $e) {
-              echo $e->getMessage();
+      try{
+          if (!isset($this->params['fibonacciNumber']) || !preg_match('/^\d+$/', $this->params['fibonacciNumber'])) {
+              throw new \Exception("Invalid input parameter");
           }
-      } else {
-          header('HTTP/1.1 404 Not Found');
-          echo null;
+          $response = new FibonacciView($this->fibonacciModel->getNumber((int)$this->params['fibonacciNumber']));
+      } catch(\Exception $e) {
+          $response = new FibonacciView(null, $e->getMessage());
       }
+      echo $response->toJson();
   }
 }

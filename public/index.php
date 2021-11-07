@@ -15,16 +15,12 @@ $uri = explode( '/', $uri );
 $components = parse_url($_SERVER['QUERY_STRING']);
 parse_str($components['path'], $params);
 
-if ($uri[1] !== 'fibonacci') {
+$requestMethod = $_SERVER["REQUEST_METHOD"];
+
+if ($uri[1] !== 'fibonacci' || $requestMethod !== 'GET') {
     header("HTTP/1.1 404 Not Found");
-    exit();
-} elseif (!isset($params['fibonacciNumber']) || !preg_match('/^\d+$/', $params['fibonacciNumber'])) {
-    header("HTTP/1.1 400 Bad Request");
-    echo("Invalid input parameter");
     exit();
 }
 
-$requestMethod = $_SERVER["REQUEST_METHOD"];
-
-$controller = new FibonacciController($requestMethod, (int)$params['fibonacciNumber']);
+$controller = new FibonacciController($params);
 $controller->processRequest();
