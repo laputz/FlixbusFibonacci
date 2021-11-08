@@ -5,6 +5,6 @@ namespace Src\Model;
 
 interface Fibonacci {
 
-public function getNumber(int $n): int; // the return type is up to you
+public function getNumber(int $n): string; // the return type is up to you
 
 }
