@@ -5,12 +5,12 @@ namespace Src\View;
 
 class FibonacciView {
 
-    private ?int $fibonacciNumber;
+    private ?string $fibonacciNumber;
 
     private ?string $errorMessage;
 
     public function __construct(
-        ?int $fibonacciNumber,
+        ?string $fibonacciNumber,
         ?string $errorMessage = null
     ) {
         $this->fibonacciNumber = $fibonacciNumber;
